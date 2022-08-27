@@ -6,8 +6,8 @@ pool:
 
 variables:
   subscription: 'muaban_azure'
-  resourceGroup: resourcegroup-tfstate
-  storageAccount: terraformtfstateskip
+  resourceGroup: master
+  storageAccount: lamterraformstate
   container: tfstate
   tfstateFile: terraform.tfstate
   anyTfChanges: false
