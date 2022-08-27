@@ -1,0 +1,49 @@
+pool:
+  name: mubanpool
+#Your build pipeline references an undefined variable named ‘terraform show -json tfplan | ConvertFrom-Json’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+
+steps:
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+  displayName: 'Install Terraform latest'
+
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+  displayName: 'Terraform : azurerm'
+  inputs:
+    workingDirectory: 'skip-step'
+    backendServiceArm: LamAzure
+    backendAzureRmResourceGroupName: master
+    backendAzureRmStorageAccountName: lamterraformstate
+    backendAzureRmContainerName: tfstate
+    backendAzureRmKey: terraform.tfstate
+
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+  displayName: 'Terraform : azurerm'
+  inputs:
+    command: plan
+    workingDirectory: 'skip-step'
+    commandOptions: '-out=tfplan'
+    environmentServiceNameAzureRM: LamAzure
+
+- powershell: |
+         # Write-Host "LASTEXITCODE : $LASTEXITCODE"
+         $plan = $(terraform show -json tfplan | ConvertFrom-Json)
+         $actions = $plan.resource_changes.change.actions
+         Write-Host "Terraform actions : $actions"
+         if (($actions -contains 'create') -or ($actions -contains 'delete') -or ($actions -contains 'update'))
+         {
+           Write-Host "Terraform will perform the following actions : $actions"
+           Write-Host "##vso[task.setvariable variable=anyTfChanges;]true"
+         }
+         else
+         {
+           Write-Host "There is no change detected in Terraform tfplan file"
+         }
+  workingDirectory: 'skip-step'
+  displayName: 'PowerShell Script'
+
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+  displayName: 'Terraform : azurerm'
+  inputs:
+    command: apply
+    workingDirectory: 'skip-step'
+    environmentServiceNameAzureRM: LamAzure
