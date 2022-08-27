@@ -17,6 +17,6 @@ provider "azurerm" {
 
 
 resource "azurerm_resource_group" "rg" {
-  name     = "resourcegroup-test-tbd-3"
+  name     = "master"
   location = "australiasoutheast"
 }
