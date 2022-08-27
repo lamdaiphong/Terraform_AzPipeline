@@ -1,5 +1,7 @@
 
 terraform {
+    backend "azurerm" {
+    }
   required_providers {
     azurerm = {
       source = "hashicorp/azurerm"
@@ -8,10 +10,7 @@ terraform {
   }
 }
 
-terraform {
-  backend "azurerm" {
-  }
-}
+
 
 resource "azurerm_resource_group" "rg" {
   name     = "resourcegroup-test-tbd-3"
