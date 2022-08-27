@@ -2,7 +2,7 @@
 # - master
 
 pool:
-  vmImage: 'mubanpool'
+  vmImage: 'ubuntu-latest'
 
 variables:
   subscription: 'muaban_azure'
