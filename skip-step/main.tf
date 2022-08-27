@@ -17,6 +17,6 @@ provider "azurerm" {
 
 
 resource "azurerm_resource_group" "rg" {
-  name     = "terraform_azpipeline"
+  name     = "terraform_azpipeline1"
   location = "australiasoutheast"
 }
