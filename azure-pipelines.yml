@@ -5,7 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  subscription: 'master_azure'
+  subscription: 'LamAzure'
   resourceGroup: master
   storageAccount: lamterraformstate
   container: tfstate
